@@ -1,0 +1,4 @@
+
+*.swp
+*.o
+Lexer-Parser/mycc

@@ -89,6 +89,34 @@ void print_tree(NODE *tree)
     print_tree0(tree, 0);
 }
 
+TOKEN* make_token(int func, TOKEN *arg1, TOKEN *arg2){
+	TOKEN* new;
+	switch (func){
+	     case NE_OP:
+	        new->type=CONSTANT;
+	        strcpy(new->lexeme,"boolean");
+	        new->value=arg1!=arg2;
+	        printf("here");
+			return new;
+	}
+	new->type=0;
+	new->lexeme="";
+	new->value= 774664;
+}
+
+TOKEN* walk(NODE *tree){
+    if (tree->type == LEAF){
+        return (TOKEN *)tree;
+    }else{
+        return make_token(tree->type,walk(tree->left),walk(tree->right));
+    }
+
+}
+
+
+
+
+
 extern int yydebug;
 extern NODE* yyparse(void);
 extern NODE* ans;
@@ -104,5 +132,15 @@ int main(int argc, char** argv)
     tree = ans;
     printf("parse finished with %p\n", tree);
     print_tree(tree);
+    
+    TOKEN *result= walk(tree);
+    printf("%d\n",result->value);
+    
+    
+    
     return 0;
 }
+
+
+
+
