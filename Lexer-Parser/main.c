@@ -4,6 +4,13 @@
 #include "C.tab.h"
 #include <string.h>
 
+
+union VALUE {
+	int integer;
+	int boolean;
+	char* string;
+};
+
 char *named(int t)
 {
     static char b[100];
@@ -89,27 +96,29 @@ void print_tree(NODE *tree)
     print_tree0(tree, 0);
 }
 
-TOKEN* make_token(int func, TOKEN *arg1, TOKEN *arg2){
-	TOKEN* new;
-	switch (func){
-	     case NE_OP:
-	        new->type=CONSTANT;
-	        strcpy(new->lexeme,"boolean");
-	        new->value=arg1!=arg2;
-	        printf("here");
-			return new;
-	}
-	new->type=0;
-	new->lexeme="";
-	new->value= 774664;
-}
 
-TOKEN* walk(NODE *tree){
-    if (tree->type == LEAF){
-        return (TOKEN *)tree;
-    }else{
-        return make_token(tree->type,walk(tree->left),walk(tree->right));
+
+
+
+
+
+union VALUE *walk(NODE *term){
+    switch(term->type){
+    	union VALUE result;
+    	=malloc(sizeof(int));
+    	case LEAF:
+    		result.integer = ((TOKEN *)term)->value;
+        	return &result;
+    	case RETURN:
+			return walk(term->left);
+		default:
+			printf("defaulted in walk");
+			result.integer=0;
+			return &result;
     }
+    
+    
+    
 
 }
 
@@ -124,7 +133,7 @@ extern void init_symbtable(void);
 
 int main(int argc, char** argv)
 {
-    NODE* tree;
+    NODE* tree; 
     if (argc>1 && strcmp(argv[1],"-d")==0) yydebug = 1;
     init_symbtable();
     printf("--C COMPILER\n");
@@ -133,11 +142,8 @@ int main(int argc, char** argv)
     printf("parse finished with %p\n", tree);
     print_tree(tree);
     
-    TOKEN *result= walk(tree);
-    printf("%d\n",result->value);
-    
-    
-    
+    union VALUE *result= walk(tree);
+    printf("the answer is %d\n", *result);    
     return 0;
 }
 
