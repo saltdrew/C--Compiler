@@ -3,13 +3,10 @@
 #include "nodes.h"
 #include "C.tab.h"
 #include <string.h>
+#include "interpreter.h"
 
 
-union VALUE {
-	int integer;
-	int boolean;
-	char* string;
-};
+
 
 char *named(int t)
 {
@@ -96,36 +93,6 @@ void print_tree(NODE *tree)
     print_tree0(tree, 0);
 }
 
-
-
-
-
-
-
-union VALUE *walk(NODE *term){
-    switch(term->type){
-    	union VALUE result;
-    	=malloc(sizeof(int));
-    	case LEAF:
-    		result.integer = ((TOKEN *)term)->value;
-        	return &result;
-    	case RETURN:
-			return walk(term->left);
-		default:
-			printf("defaulted in walk");
-			result.integer=0;
-			return &result;
-    }
-    
-    
-    
-
-}
-
-
-
-
-
 extern int yydebug;
 extern NODE* yyparse(void);
 extern NODE* ans;
@@ -133,7 +100,7 @@ extern void init_symbtable(void);
 
 int main(int argc, char** argv)
 {
-    NODE* tree; 
+    NODE* tree;
     if (argc>1 && strcmp(argv[1],"-d")==0) yydebug = 1;
     init_symbtable();
     printf("--C COMPILER\n");
@@ -141,12 +108,7 @@ int main(int argc, char** argv)
     tree = ans;
     printf("parse finished with %p\n", tree);
     print_tree(tree);
-    
-    union VALUE *result= walk(tree);
-    printf("the answer is %d\n", *result);    
+    union VALUE *result = walk(tree);
+    printf("answer is %d\n",result->integer);
     return 0;
 }
-
-
-
-
