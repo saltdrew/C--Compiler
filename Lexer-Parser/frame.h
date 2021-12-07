@@ -1,16 +1,21 @@
 
 #include "nodes.h"
 
-typedef struct binding {
-	TOKEN *name ;
-	VALUE *val ;
-	BINDING *next ;
-} BINDING ;
+typedef union VALUE {
+	int integer;
+	int boolean;
+	char* string;
+}VALUE;
 
-typedef struct frame{
-	BINDING *bindings;
-	FRAME *next;
-}
+typedef struct BINDING {
+	TOKEN *name;
+	union VALUE *val;
+	struct BINDING *next;
+} BINDING;
 
-VALUE * name_method (TOKEN *x, FRAME *frame );
-VALUE * assign_method (TOKEN *x ,FRAME *frame );
+typedef struct FRAME{
+	struct BINDING *bindings;
+	struct FRAME *next;
+} FRAME;
+union VALUE *name_method(TOKEN *x, struct FRAME *frame);
+union VALUE *assign_method(TOKEN *x ,struct FRAME *frame);

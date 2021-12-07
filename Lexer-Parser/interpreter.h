@@ -1,7 +1,3 @@
-typedef union VALUE {
-    int integer;
-	int boolean;
-	char* string;
-}value;
+#include "frame.h"
 
 union VALUE *interpret(NODE *term);

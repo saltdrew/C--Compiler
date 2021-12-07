@@ -1,18 +1,11 @@
 #include <stdio.h>
+#include "interpreter.h"
 #include "C.tab.h"
 #include "ctype.h"
-#include "frame.h"
-#include <string.h>
 
-union VALUE {
-	int integer;
-	int boolean;
-	char* string;
-}value;
+union VALUE value;
 
-
-union VALUE *walk(NODE *term, TOKEN** env){
-	printf("%d\n",lookup_token("size")->value);
+union VALUE *walk(NODE *term, struct FRAME *env){
 	switch(term->type){
 		case 'd':
 			return walk(term->left,env);
@@ -23,7 +16,6 @@ union VALUE *walk(NODE *term, TOKEN** env){
 			return &value;
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
-			lookup_token()
     		value.integer = token->value;
         	return &value;
     	case RETURN:
@@ -36,6 +28,6 @@ union VALUE *walk(NODE *term, TOKEN** env){
 }
 
 union VALUE *interpret(NODE *term){
-	init_symbtable();
-	walk(term,symbtable);
+	struct FRAME *env;
+	walk(term,env);
 }

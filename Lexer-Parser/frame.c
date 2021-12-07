@@ -1,4 +1,24 @@
-VALUE * name_method (TOKEN *x, FRAME *frame ) {
+#include "frame.h"
+
+typedef union VALUE {
+	int integer;
+	int boolean;
+	char* string;
+}value;
+
+typedef struct BINDING {
+	TOKEN *name ;
+	union VALUE *val ;
+	BINDING *next ;
+} BINDING ;
+
+typedef struct FRAME{
+	BINDING *bindings;
+	struct FRAME *next;
+}
+
+
+union VALUE* name_method (TOKEN *x, FRAME *frame ) {
     while ( frame != NULL ) {
         BINDING * bindings = frame - > bindings ;
         while ( bindings != NULL ) {
@@ -12,7 +32,7 @@ VALUE * name_method (TOKEN *x, FRAME *frame ) {
     error (" unbound variable " );
 }
 
-VALUE * assign_method (TOKEN *x ,FRAME *frame ) {
+union VALUE* assign_method (TOKEN *x ,FRAME *frame ) {
     while ( frame != NULL ) {
         BINDING * bindings = frame - > bindings ;
         while ( bindings != NULL ) {
