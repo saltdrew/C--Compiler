@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "C.tab.h"
 #include "ctype.h"
-#include "nodes.h"
+#include "frame.h"
 #include <string.h>
 
 union VALUE {
@@ -10,27 +10,32 @@ union VALUE {
 	char* string;
 }value;
 
-union VALUE *walk(NODE *term){
+
+union VALUE *walk(NODE *term, TOKEN** env){
+	printf("%d\n",lookup_token("size")->value);
 	switch(term->type){
 		case 'd':
-			return walk(term->left);
+			return walk(term->left,env);
 		case 'D':
-			return walk(term->right);
+			return walk(term->right,env);
 		case '+':
-			value.integer= walk(term->left)->integer + walk(term->right)->integer;
+			value.integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
 			return &value;
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
+			lookup_token()
     		value.integer = token->value;
         	return &value;
     	case RETURN:
-			printf("return\n");
-			printf("return node has type %d\n",term->type);
-			printf("type of return's left node: %d\n",(term->left)->type);
-			return walk(term->left);
+			return walk(term->left,env);
 		default:
 			printf("defaulted in walk\n");
 			value.integer=1;
 			return &value;
     }
+}
+
+union VALUE *interpret(NODE *term){
+	init_symbtable();
+	walk(term,symbtable);
 }

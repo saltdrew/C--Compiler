@@ -4,4 +4,4 @@ typedef union VALUE {
 	char* string;
 }value;
 
-union VALUE *walk(NODE *term);
+union VALUE *interpret(NODE *term);
