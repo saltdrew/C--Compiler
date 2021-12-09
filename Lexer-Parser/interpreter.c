@@ -3,9 +3,9 @@
 #include "C.tab.h"
 #include "ctype.h"
 
-union VALUE value;
+VALUE value;
 
-union VALUE *walk(NODE *term, struct FRAME *env){
+VALUE *walk(NODE *term, FRAME *env){
 	switch(term->type){
 		case 'd':
 			return walk(term->left,env);
@@ -16,8 +16,13 @@ union VALUE *walk(NODE *term, struct FRAME *env){
 			return &value;
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
-    		value.integer = token->value;
-        	return &value;
+			if (token->type = IDENTIFIER){
+				return name_method(token,env);
+			}
+			else if (token->type = CONSTANT){
+				value.integer = token ->value;
+				return &value;
+			}
     	case RETURN:
 			return walk(term->left,env);
 		default:
@@ -27,7 +32,7 @@ union VALUE *walk(NODE *term, struct FRAME *env){
     }
 }
 
-union VALUE *interpret(NODE *term){
-	struct FRAME *env;
+VALUE *interpret(NODE *term){
+	FRAME *env;
 	walk(term,env);
 }

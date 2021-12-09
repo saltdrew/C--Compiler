@@ -6,5 +6,5 @@ typedef struct node {
   struct node *right;
 } NODE;
 
-NODE* make_leaf(TOKEN*);
-NODE* make_node(int, NODE*, NODE*);
+NODE* make_leaf(TOKEN* l);
+NODE* make_node(int t, NODE* left, NODE* right);

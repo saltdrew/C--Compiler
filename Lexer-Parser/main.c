@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <ctype.h>
-#include "nodes.h"
 #include "C.tab.h"
 #include <string.h>
 #include "interpreter.h"
@@ -107,7 +106,7 @@ int main(int argc, char** argv)
     tree = ans;
     printf("parse finished with %p\n", tree);
     print_tree(tree);
-    union VALUE *result = interpret(tree);
+    VALUE *result = interpret(tree);
     printf("answer is %d\n",result->integer);
     return 0;
 }

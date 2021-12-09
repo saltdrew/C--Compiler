@@ -1,3 +1,3 @@
 #include "frame.h"
 
-union VALUE *interpret(NODE *term);
+VALUE *interpret(NODE *term);

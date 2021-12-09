@@ -1,46 +1,31 @@
 #include "frame.h"
+#include "stddef.h"
 
-typedef union VALUE {
-	int integer;
-	int boolean;
-	char* string;
-}value;
-
-typedef struct BINDING {
-	TOKEN *name ;
-	union VALUE *val ;
-	BINDING *next ;
-} BINDING ;
-
-typedef struct FRAME{
-	BINDING *bindings;
-	struct FRAME *next;
-}
-
-
-union VALUE* name_method (TOKEN *x, FRAME *frame ) {
+VALUE* name_method (TOKEN *x, FRAME *frame ) {
     while ( frame != NULL ) {
-        BINDING * bindings = frame - > bindings ;
+        BINDING * bindings = frame -> bindings ;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
                 return bindings -> val ;
             }
-            bindings = bindings - > next ;
+            bindings = bindings -> next ;
         }
         frame = frame -> next ;
     }
-    error (" unbound variable " );
+    return 0;
 }
 
-union VALUE* assign_method (TOKEN *x ,FRAME *frame ) {
+VALUE* assign_method (TOKEN *x , FRAME *frame ) {
     while ( frame != NULL ) {
-        BINDING * bindings = frame - > bindings ;
+        BINDING * bindings = frame -> bindings ;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
-                bindings -> val = value ;
-                return value ;
+				VALUE* tempval;
+				tempval->integer=x->value;
+                bindings -> val = tempval;
+                return tempval;
             }
-            bindings = bindings - > next ;
+            bindings = bindings -> next ;
         }
         frame = frame -> next ;
     }
