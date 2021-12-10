@@ -19,4 +19,5 @@ typedef struct FRAME{
 } FRAME;
 
 VALUE *name_method(TOKEN *x, FRAME *frame);
-VALUE *assign_method(TOKEN *x ,FRAME *frame);
+VALUE *assign_method(TOKEN *x ,FRAME *frame, VALUE* value);
+VALUE * declaration_method ( TOKEN * x , FRAME * frame );
