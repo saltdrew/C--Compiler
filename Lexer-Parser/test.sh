@@ -1,4 +1,4 @@
 #!/bin/bash
 rm mycc;
 make
-./mycc <<< "int main(void){int x; }"
+./mycc <<< "int main(void){int x=5;}"

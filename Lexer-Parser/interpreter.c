@@ -28,16 +28,14 @@ VALUE *walk(NODE *term, FRAME *env){
 		case ';':
 			return select_return(walk(term->left,env),walk(term->right,env));
 		case '~':
-
 			if (term->right->type == 'D'){
 				walk(term->right,env);
 			}else{
 				printf("here1\n");
-				declaration_method((TOKEN*)(term->right),env);
-				return 0;
+				return declaration_method((TOKEN*)(term->right),env);;
 			}
 		case '=':
-			assign_method((TOKEN*)(term->left),env,walk(term->right,env));
+			return assign_method((TOKEN*)(term->left),env,walk(term->right,env));
 
 		case '+':
 			value->integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
@@ -63,7 +61,8 @@ VALUE *walk(NODE *term, FRAME *env){
 }
 
 VALUE *interpret(NODE *term){
-	FRAME *env = malloc(sizeof(FRAME));
+	FRAME *env = (FRAME*)malloc(sizeof(FRAME));
 	value=(VALUE*)malloc(sizeof(VALUE));
+
 	return walk(term,env);
 }
