@@ -25,7 +25,7 @@ VALUE *select_return(VALUE *l, VALUE *r){
 
 VALUE *walk(NODE *term, FRAME *env){
 	value=(VALUE*)malloc(sizeof(VALUE));
-	printf("walking node with type %d\n",term->type);
+	//printf("walking node with type %d\n",term->type);
 	switch(term->type){
 		case 'd':
 			return walk(term->left,env);
@@ -47,7 +47,7 @@ VALUE *walk(NODE *term, FRAME *env){
 					walk(arg1,env);
 					return NULL;
 				default:
-					printf("defaulted in ~, returning null\n");
+					//printf("defaulted in ~, returning null\n");
 					return NULL;
 			}break;
 		case '=':
@@ -59,7 +59,7 @@ VALUE *walk(NODE *term, FRAME *env){
 			return value;
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
-			printf("encountered leaf, type is %d\n",token->type);
+			//printf("encountered leaf, type is %d\n",token->type);
 			if (token->type == IDENTIFIER){
 				return name_method(token,env);
 			}
@@ -70,7 +70,7 @@ VALUE *walk(NODE *term, FRAME *env){
     	case RETURN:
 			return walk(term->left,env);
 		default:
-			printf("defaulted in walk, returning null\n");
+			//printf("defaulted in walk, returning null\n");
 			return NULL;
     }
 }

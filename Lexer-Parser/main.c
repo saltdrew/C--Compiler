@@ -3,6 +3,7 @@
 #include "C.tab.h"
 #include <string.h>
 #include "interpreter.h"
+#include <stdlib.h>
 
 
 
@@ -104,15 +105,14 @@ int main(int argc, char** argv)
     printf("--C COMPILER\n");
     yyparse();
     tree = ans;
-    printf("parse finished with %p\n", tree);
-    print_tree(tree);
+    //printf("parse finished with %p\n", tree);
+    //print_tree(tree);
     VALUE *result = interpret(tree);
     if (result==NULL){
         printf("result is null\n");
     }else{
-        printf("answer is %d\n",result->integer);
+        printf("%d\n",result->integer);
     }
     free(result);
-
     return 0;
 }
