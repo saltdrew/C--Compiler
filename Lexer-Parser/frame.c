@@ -18,12 +18,10 @@ VALUE *name_method (TOKEN *x, FRAME *frame ) {
 }
 
 VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
-    printf("attempting to assign...\n");
     while ( frame != NULL ) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
-                printf("assigning, val=%s\n",value);
                 bindings -> val = value;
                 return value;
             }
@@ -31,7 +29,7 @@ VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
         }
         frame = frame -> next ;
     }
-    error (" unbound variable " );
+    printf("Error: attempting to assign unbound variable\n");
 }
 
 VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
@@ -42,9 +40,7 @@ VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
         new -> val =( VALUE *)0; // temporary
         new -> next = bindings;
         frame -> bindings = new;
-        printf("here declare\n");
-        printf("%d\n",new->name->type);
         return ( VALUE *)0; // temporary
     }
-    error (" binding allocation failed " );
+    printf("Error: binding allocation failed\n");
 }
