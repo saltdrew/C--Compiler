@@ -18,12 +18,12 @@ VALUE *name_method (TOKEN *x, FRAME *frame ) {
 }
 
 VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
+    printf("attempting to assign...\n");
     while ( frame != NULL ) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
-
             if ( bindings -> name == x){
-                printf("assigning\n");
+                printf("assigning, val=%s\n",value);
                 bindings -> val = value;
                 return value;
             }

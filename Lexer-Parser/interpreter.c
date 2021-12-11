@@ -48,7 +48,7 @@ VALUE *walk(NODE *term, FRAME *env){
 				case 'D':
 					walk(term->right,env);
 				case LEAF:
-					return declaration_method((TOKEN*)(arg1),env);
+					return declaration_method((TOKEN*)(arg1->left),env);
 				case '=':
 					declaration_method((TOKEN*)(arg1->left->left),env);
 					printf("new var is %d\n",0000); //DO THIS
@@ -59,9 +59,12 @@ VALUE *walk(NODE *term, FRAME *env){
 					return NULL;
 			}break;
 		case '=':
-			assign_method((TOKEN*)(term->left->left),env,walk(term->right,env));
+			VALUE *toAssign= walk(term->right,env); //FIX THIS
+			printf("value to assign is %d\n",toAssign);
+			assign_method((TOKEN*)(term->left->left),env,toAssign);
 			return NULL;
 		case '+':
+			printf("here11\n");
 			value->integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
 			return value;
     	case LEAF:
