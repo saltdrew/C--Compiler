@@ -9,10 +9,18 @@ VALUE* value;
 
 
 VALUE *select_return(VALUE *l, VALUE *r){
-	if (l->integer==NONE){
-		return r;
-	}else{
+
+	if (l==NULL && r==NULL){
+		printf("Both Null! \n");
 		return l;
+	}
+	else if (l==NULL){
+		return r;
+	}else if (r==NULL){
+		return l;
+	}else{
+		printf("both have values\n");
+		return r;
 	}
 }
 
@@ -28,27 +36,31 @@ VALUE *walk(NODE *term, FRAME *env){
 		case 'D':
 			return walk(term->right,env);
 		case ';':
-			return select_return(walk(term->left,env),walk(term->right,env));
+			printf("left is %d\n",term->left->type);
+			printf("right is %d\n",term->right->type);
+			VALUE *left = walk(term->left,env);
+			VALUE *right = walk(term->right,env);
+			printf("right result %d\n",right->integer);
+			return select_return(left,right);
 		case '~':
 			NODE *arg1=term->right;
 			switch(arg1->type){
 				case 'D':
 					walk(term->right,env);
-				case IDENTIFIER:
+				case LEAF:
 					return declaration_method((TOKEN*)(arg1),env);
 				case '=':
-					declaration_method((TOKEN*)(arg1->left),env);
+					declaration_method((TOKEN*)(arg1->left->left),env);
 					printf("new var is %d\n",0000); //DO THIS
 					walk(arg1,env);
-					value->integer=NONE;
-					return value;
+					return NULL;
 				default:
-					printf("defaulted in ~\n");
-					value->integer=NONE;
-					return value;
+					printf("defaulted in ~, returning null\n");
+					return NULL;
 			}break;
 		case '=':
-			return assign_method((TOKEN*)(term->left),env,walk(term->right,env));
+			assign_method((TOKEN*)(term->left->left),env,walk(term->right,env));
+			return NULL;
 		case '+':
 			value->integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
 			return value;
@@ -60,21 +72,22 @@ VALUE *walk(NODE *term, FRAME *env){
 				return name_method(token,env);
 			}
 			else if (token->type == CONSTANT){
+				printf("here5\n");
 				value->integer = token->value;
 				return value;
 			}
     	case RETURN:
 			return walk(term->left,env);
 		default:
-			printf("defaulted in walk\n");
-			value->integer=NONE;
-			return value;
+			printf("defaulted in walk, returning null\n");
+			return NULL;
     }
 }
 
 VALUE *interpret(NODE *term){
 	FRAME *env = (FRAME*)malloc(sizeof(FRAME));
 	value=(VALUE*)malloc(sizeof(VALUE));
-
-	return walk(term,env);
+	VALUE* result = walk(term,env);
+	free(env);
+	return result;
 }

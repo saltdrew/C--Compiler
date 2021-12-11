@@ -1,9 +1,10 @@
 #include "frame.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-VALUE* name_method (TOKEN *x, FRAME *frame ) {
-    while ( frame != NULL ) {
+VALUE *name_method (TOKEN *x, FRAME *frame ) {
+    while(frame!=NULL){
         BINDING * bindings = frame -> bindings ;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
@@ -13,14 +14,16 @@ VALUE* name_method (TOKEN *x, FRAME *frame ) {
         }
         frame = frame -> next ;
     }
-    return 0;
+    return NULL;
 }
 
-VALUE* assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
+VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
     while ( frame != NULL ) {
-        BINDING * bindings = frame -> bindings ;
+        BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
+
             if ( bindings -> name == x){
+                printf("assigning\n");
                 bindings -> val = value;
                 return value;
             }
@@ -39,6 +42,8 @@ VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
         new -> val =( VALUE *)0; // temporary
         new -> next = bindings;
         frame -> bindings = new;
+        printf("here declare\n");
+        printf("%d\n",new->name->type);
         return ( VALUE *)0; // temporary
     }
     error (" binding allocation failed " );

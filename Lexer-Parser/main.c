@@ -107,6 +107,12 @@ int main(int argc, char** argv)
     printf("parse finished with %p\n", tree);
     print_tree(tree);
     VALUE *result = interpret(tree);
-    printf("answer is %d\n",result->integer);
+    if (result==NULL){
+        printf("result is null\n");
+    }else{
+        printf("answer is %d\n",result->integer);
+    }
+    free(result);
+
     return 0;
 }
