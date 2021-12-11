@@ -3,11 +3,13 @@
 #include "interpreter.h"
 #include "C.tab.h"
 #include "ctype.h"
+#define NONE 199967
 
 VALUE* value;
 
+
 VALUE *select_return(VALUE *l, VALUE *r){
-	if (l==NULL){
+	if (l->integer==NONE){
 		return r;
 	}else{
 		return l;
@@ -28,15 +30,25 @@ VALUE *walk(NODE *term, FRAME *env){
 		case ';':
 			return select_return(walk(term->left,env),walk(term->right,env));
 		case '~':
-			if (term->right->type == 'D'){
-				walk(term->right,env);
-			}else{
-				printf("here1\n");
-				return declaration_method((TOKEN*)(term->right),env);;
-			}
+			NODE *arg1=term->right;
+			switch(arg1->type){
+				case 'D':
+					walk(term->right,env);
+				case IDENTIFIER:
+					return declaration_method((TOKEN*)(arg1),env);
+				case '=':
+					declaration_method((TOKEN*)(arg1->left),env);
+					printf("new var is %d\n",0000); //DO THIS
+					walk(arg1,env);
+					value->integer=NONE;
+					return value;
+				default:
+					printf("defaulted in ~\n");
+					value->integer=NONE;
+					return value;
+			}break;
 		case '=':
 			return assign_method((TOKEN*)(term->left),env,walk(term->right,env));
-
 		case '+':
 			value->integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
 			return value;
@@ -55,7 +67,7 @@ VALUE *walk(NODE *term, FRAME *env){
 			return walk(term->left,env);
 		default:
 			printf("defaulted in walk\n");
-			value->integer=1;
+			value->integer=NONE;
 			return value;
     }
 }

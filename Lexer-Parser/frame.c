@@ -38,7 +38,7 @@ VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
         new -> name = x;
         new -> val =( VALUE *)0; // temporary
         new -> next = bindings;
-        frame -> bindings = new ;
+        frame -> bindings = new;
         return ( VALUE *)0; // temporary
     }
     error (" binding allocation failed " );
