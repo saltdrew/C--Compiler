@@ -7,6 +7,89 @@
 
 VALUE* value;
 
+VALUE* apply(int function, VALUE* left, VALUE* right){
+	value=(VALUE*)malloc(sizeof(VALUE));
+	int dataType;
+	int integerType=0;
+	int booleanType=1;
+	int stringType=2;
+	if (left->integer!=NULL && right->integer!=NULL){
+		dataType=integerType;
+	}else if (left->boolean!=NULL && right->boolean!=NULL){
+		dataType=booleanType;
+	}else if (left->string!=NULL && right->string!=NULL){
+		dataType=stringType;
+	}else{
+		printf("Error in apply: No data type found!\n");
+		return NULL;
+	}
+
+	switch (function){
+		case '+':
+			if (dataType!=integerType){
+				printf("Error in apply, '+' called but types are not integer");
+				return NULL;
+			}
+			value->integer = (left->integer) + (right->integer);
+		case '-':
+			if (dataType!=integerType){
+				printf("Error in apply, '-' called but types are not integer");
+				return NULL;
+			}
+			value->integer = (left->integer) - (right->integer);
+		case '*':
+			if (dataType!=integerType){
+				printf("Error in apply, '*' called but types are not integer");
+				return NULL;
+			}
+			value->integer = (left->integer) * (right->integer);
+		case '/':
+			if (dataType!=integerType){
+				printf("Error in apply, '/' called but types are not integer");
+				return NULL;
+			}
+			value->integer = (left->integer) / (right->integer);
+		case '%':
+			if (dataType!=integerType){
+				printf("Error in apply, '/' called but types are not integer");
+				return NULL;
+			}
+			value->integer = (left->integer) % (right->integer);
+		case '<':
+			if (dataType!=integerType){
+				printf("Error in apply, '/' called but types are not integer");
+				return NULL;
+			}
+			value->boolean = (left->integer) < (right->integer);
+		case '>':
+			if (dataType!=integerType){
+				printf("Error in apply, '>' called but types are not integer");
+				return NULL;
+			}
+			value->boolean = (left->integer) > (right->integer);
+		case NE_OP:
+			if (dataType==integerType){
+				value->boolean = (left->integer) != (right->integer);
+			}else if (dataType==booleanType){
+				value->boolean = (left->boolean) != (right->boolean);
+			}else {
+				printf("Error in apply, '!=' called but types are not intger or boolean");
+			}
+		case EQ_OP:
+			if (dataType==integerType){
+				value->boolean = (left->integer) == (right->integer);
+			}else if (dataType==booleanType){
+				value->boolean = (left->boolean) == (right->boolean);
+			}else {
+				printf("Error in apply, '==' called but types are not intger or boolean");
+			}
+
+	}
+
+	free(left);
+	free(right);
+	return value;
+}
 
 VALUE *select_return(VALUE *l, VALUE *r){
 
@@ -25,6 +108,8 @@ VALUE *select_return(VALUE *l, VALUE *r){
 
 VALUE *walk(NODE *term, FRAME *env){
 	value=(VALUE*)malloc(sizeof(VALUE));
+	VALUE* left;
+	VALUE* right;
 	//printf("walking node with type %d\n",term->type);
 	switch(term->type){
 		case 'd':
@@ -32,8 +117,8 @@ VALUE *walk(NODE *term, FRAME *env){
 		case 'D':
 			return walk(term->right,env);
 		case ';':
-			VALUE *left = walk(term->left,env);
-			VALUE *right = walk(term->right,env);
+			left = walk(term->left,env);
+			right = walk(term->right,env);
 			return select_return(left,right);
 		case '~':
 			NODE *arg1=term->right;
@@ -57,6 +142,14 @@ VALUE *walk(NODE *term, FRAME *env){
 		case '+':
 			value->integer= walk(term->left,env)->integer + walk(term->right,env)->integer;
 			return value;
+		case '*':
+			left = walk(term->left,env);
+			right = walk(term->right,env);
+			value->integer = left->integer * right->integer ;
+			free(left);
+			free(right);
+			return value;
+
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
 			//printf("encountered leaf, type is %d\n",token->type);
