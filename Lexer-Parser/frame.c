@@ -8,7 +8,9 @@ VALUE *name_method (TOKEN *x, FRAME *frame ) {
         BINDING * bindings = frame -> bindings ;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
+                printf("here %d\n",bindings->val);
                 return bindings -> val ;
+
             }
             bindings = bindings -> next ;
         }
@@ -22,6 +24,7 @@ VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
+                printf("assigning %s to %d\n",bindings->name->lexeme,value);
                 bindings -> val = value;
                 return value;
             }
