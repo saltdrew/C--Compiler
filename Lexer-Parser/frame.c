@@ -14,10 +14,11 @@ VALUE *name_method (TOKEN *x, FRAME *frame ) {
         }
         frame = frame -> next ;
     }
+    perror("Attempting to access unbound variable");
     return NULL;
 }
 
-VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
+VALUE *assign_method (TOKEN *x ,FRAME *frame, VALUE* value) {
     while ( frame != NULL ) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
@@ -30,12 +31,12 @@ VALUE *assign_method (TOKEN *x , FRAME *frame, VALUE* value) {
         }
         frame = frame -> next ;
     }
-    printf("Error: attempting to assign unbound variable\n");
+    perror("Attempting to assign unbound variable");
 }
 
 
 
-VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
+VALUE * declaration_method (TOKEN *x, FRAME* frame ) {
     BINDING * bindings = frame -> bindings ;
     BINDING * new = malloc ( sizeof ( BINDING ));
     if ( new !=0) { // check allocation worked
@@ -45,5 +46,28 @@ VALUE * declaration_method ( TOKEN * x , FRAME * frame ) {
         frame -> bindings = new;
         return ( VALUE *)0; // temporary
     }
-    printf("Error: binding allocation failed\n");
+    perror("Binding allocation failed");
+}
+
+FRAME* make_frame(BINDING *bindings, FRAME* next){
+    FRAME *a = (FRAME*)malloc(sizeof(FRAME));
+    if (a==NULL) {
+      perror("Cannot make frame");
+      exit(1);
+    }
+    a->bindings = bindings;
+    a->next = next;
+    return a;
+
+}
+BINDING* make_binding(TOKEN *name, VALUE* val, BINDING* next){
+    BINDING *a = (BINDING*)malloc(sizeof(BINDING));
+    if (a==NULL) {
+      perror("Cannot make frame");
+      exit(1);
+    }
+    a->name=name;
+    a->val=val;
+    a->next=next;
+    return a;
 }

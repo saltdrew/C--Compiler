@@ -149,7 +149,7 @@ VALUE *walk(NODE *term, FRAME *env){
     }
 }
 
-VALUE *if_method (NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *env) {
+VALUE *if_method(NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *env) {
 	if (walk(antecedent, env)->boolean == TRUE) {
 		return walk(consequent ,env);
 	}else{
@@ -157,9 +157,32 @@ VALUE *if_method (NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *
 			return walk(alternative ,env);
 		}
 		return NULL;
-
 	}
 }
+
+FRAME *extend_frame(FRAME *env, NODE *ids, NODE *args){
+    FRAME *newenv = make_frame(NULL, NULL);
+    BINDING *bindings = NULL;
+	NODE* ip;
+	NODE* ap;
+    for (ip = ids, ap = args; (ip != NULL) && (ap != NULL); ip->right, ap->right){
+        bindings = make_binding((TOKEN*)ip->left, walk(ap->left, env), bindings);
+    }
+    newenv -> bindings = bindings ;
+    return newenv;
+}
+
+NODE* formals(CLOSURE* f){
+	return (f->code->right->right);
+}
+
+VALUE * lexical_call_method ( TOKEN *name , NODE *args , FRAME *env) {
+	CLOSURE *f = name_method (name, env)->closure;
+	FRAME *newenv = extend_frame ( env , formals (f) , args );
+	newenv -> next =f->env;
+	return walk(f->code, newenv);
+}
+
 
 VALUE *interpret(NODE *term){
 	FRAME *env = (FRAME*)malloc(sizeof(FRAME));
