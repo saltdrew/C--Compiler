@@ -5,6 +5,8 @@
 #include "ctype.h"
 
 
+VALUE *if_method (NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *env) ;
+
 VALUE* applyFunc(int function, VALUE* left, VALUE* right){
 	VALUE* value=(VALUE*)malloc(sizeof(VALUE));
 	printf("applying function %d on %d and %d\n",function,left->integer,right->integer);
@@ -34,19 +36,19 @@ VALUE* applyFunc(int function, VALUE* left, VALUE* right){
 			value->boolean = (left->integer) != (right->integer);
 			break;
 		case EQ_OP:
-			value->boolean = (left->integer) != (right->integer);
+			value->boolean = (left->integer) == (right->integer);
 			break;
 		default:
 			printf("other function detected\n");
 			return NULL;
 	}
-
 	printf("result of function is %d\n",value->integer);
 	return value;
 }
 
-VALUE *select_return(VALUE *l, VALUE *r){
 
+
+VALUE *select_return(VALUE *l, VALUE *r){
 	if (l==NULL && r==NULL){
 		return NULL;
 	}
@@ -95,11 +97,12 @@ VALUE *walk(NODE *term, FRAME *env){
 					printf("defaulted in ~, returning null\n");
 					return NULL;
 			}
-		case '=':
+		case '=':{
 			VALUE *toAssign= walk(term->right,env); //FIX THIS
 			assign_method((TOKEN*)(term->left->left),env,toAssign);
 			return NULL;
 			break;
+		}
     	case LEAF:
 			TOKEN *token = (TOKEN*)(term->left);
 			printf("encountered leaf, type is %d\n",token->type);
@@ -118,7 +121,21 @@ VALUE *walk(NODE *term, FRAME *env){
 			return walk(term->left,env);
 			break;
 		case IF:
-			break;
+			printf("here IF. right node is, %d\n",term->right->type);
+			NODE* condition = term->left;
+			NODE* consequent;
+			NODE* alternative;
+
+			if (term->right->type==ELSE){
+				printf("heree\n");
+				consequent = term->right->left;
+				alternative = term->right->right;
+			}else{
+				consequent = term->right;
+				alternative = NULL;
+			}
+			return if_method(condition,consequent,alternative,env);
+
 		case WHILE:
 			break;
 		case CONTINUE:
@@ -130,6 +147,18 @@ VALUE *walk(NODE *term, FRAME *env){
 			right = walk(term->right,env);
 			return applyFunc(term->type, left, right);
     }
+}
+
+VALUE *if_method (NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *env) {
+	if (walk(antecedent, env)->boolean == TRUE) {
+		return walk(consequent ,env);
+	}else{
+		if (alternative!=NULL){
+			return walk(alternative ,env);
+		}
+		return NULL;
+
+	}
 }
 
 VALUE *interpret(NODE *term){

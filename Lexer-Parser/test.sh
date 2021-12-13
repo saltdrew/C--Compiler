@@ -30,3 +30,21 @@ if ./mycc <<< "int main(void){int x=3; int y=4; y=y+7;x=x+y; return y*x;}" | gre
 else
     echo "multi variable complex test FAILED"
 fi
+
+if ./mycc <<< "int main(void){int x=3; int y=4; y=y==4; y=y!=x;}" | grep -q '1'; then
+    echo "boolean result test passed"
+else
+    echo "boolean result test FAILED"
+fi
+
+if ./mycc <<< "int main(void){int x=5;if (x==5){return x*x;}}}" | grep -q '25'; then
+    echo "if only test passed"
+else
+    echo "if only test FAILED"
+fi
+
+if ./mycc <<< "int main(void){int x=5;if (x==6){return x*x;}else{return x+x;}}}" | grep -q '25'; then
+    echo "if/else test passed"
+else
+    echo "if/else test FAILED"
+fi
