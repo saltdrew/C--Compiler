@@ -30,9 +30,10 @@ typedef struct CLOSURE {
 
 
 
-VALUE *name_method(TOKEN *x, FRAME *frame);
-VALUE *assign_method(TOKEN *x ,FRAME *frame, VALUE *value);
-VALUE *declaration_method ( TOKEN *x , FRAME *frame );
+VALUE* name_method(TOKEN *x, FRAME *frame);
+VALUE* assign_method(TOKEN *x ,FRAME *frame, VALUE *value);
+VALUE* declaration_method ( TOKEN *x , FRAME *frame );
 
 FRAME* make_frame(BINDING *bindings, FRAME* next);
 BINDING* make_binding(TOKEN *name, VALUE* val, BINDING* next);
+CLOSURE* make_closure(FRAME *env, NODE* code);

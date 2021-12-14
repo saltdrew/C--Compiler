@@ -23,7 +23,7 @@ VALUE *assign_method (TOKEN *x ,FRAME *frame, VALUE* value) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
-                printf("assigning %s to %d\n",bindings->name->lexeme,value->integer);
+                printf("assigning %d to %s\n",value->integer,bindings->name->lexeme);
                 bindings -> val = value;
                 return value;
             }
@@ -70,4 +70,15 @@ BINDING* make_binding(TOKEN *name, VALUE* val, BINDING* next){
     a->val=val;
     a->next=next;
     return a;
+}
+
+CLOSURE* make_closure(FRAME *env, NODE* code){
+    CLOSURE* a = (CLOSURE*)malloc(sizeof(CLOSURE));
+    if (a==NULL) {
+      perror("Cannot make frame");
+      exit(1);
+    }
+    a->env = env;
+    a->code = code;
+
 }

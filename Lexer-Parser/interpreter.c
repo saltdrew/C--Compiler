@@ -3,9 +3,13 @@
 #include "interpreter.h"
 #include "C.tab.h"
 #include "ctype.h"
+#include <string.h>
+#include "print_tree.h"
 
 
 VALUE *if_method (NODE *antecedent, NODE *consequent, NODE *alternative, FRAME *env) ;
+VALUE *lexical_call_method ( TOKEN *name , NODE *args , FRAME *env);
+
 
 VALUE* applyFunc(int function, VALUE* left, VALUE* right){
 	VALUE* value=(VALUE*)malloc(sizeof(VALUE));
@@ -46,8 +50,6 @@ VALUE* applyFunc(int function, VALUE* left, VALUE* right){
 	return value;
 }
 
-
-
 VALUE *select_return(VALUE *l, VALUE *r){
 	if (l==NULL && r==NULL){
 		return NULL;
@@ -68,12 +70,22 @@ VALUE *walk(NODE *term, FRAME *env){
 	VALUE* right;
 	printf("walking node with type %d\n",term->type);
 	switch(term->type){
-		case 'd':
-			return walk(term->left,env);
-			break;
 		case 'D':
-			return walk(term->right,env);
+			TOKEN* name = (TOKEN*)term->left->right->left->left;
+			declaration_method(name,env);
+
+			CLOSURE* f = make_closure(env,term);
+
+			VALUE* toAssign = (VALUE*)(malloc(sizeof(VALUE)));
+			toAssign->closure = f;
+			assign_method(name, env, toAssign);
+			if (strcmp(name->lexeme,"main")==0){
+				return walk(term->right,env);
+			}
+			return NULL;
 			break;
+		case APPLY:
+			return lexical_call_method((TOKEN*)term->left->left,term->right,env);
 		case ';':
 			left = walk(term->left,env);
 			right = walk(term->right,env);
@@ -121,13 +133,11 @@ VALUE *walk(NODE *term, FRAME *env){
 			return walk(term->left,env);
 			break;
 		case IF:
-			printf("here IF. right node is, %d\n",term->right->type);
 			NODE* condition = term->left;
 			NODE* consequent;
 			NODE* alternative;
 
 			if (term->right->type==ELSE){
-				printf("heree\n");
 				consequent = term->right->left;
 				alternative = term->right->right;
 			}else{
@@ -165,22 +175,34 @@ FRAME *extend_frame(FRAME *env, NODE *ids, NODE *args){
     BINDING *bindings = NULL;
 	NODE* ip;
 	NODE* ap;
-    for (ip = ids, ap = args; (ip != NULL) && (ap != NULL); ip->right, ap->right){
-        bindings = make_binding((TOKEN*)ip->left, walk(ap->left, env), bindings);
+	TOKEN* name;
+	VALUE* value;
+
+    for (ip = ids, ap = args; (ip->type==',' || ip->type=='~') && (ap->type==',' || ap->type==LEAF); ip=ip->left, ap=ap->left){
+		if (ip->type == ','){
+			name = (TOKEN*)ip->right->right->left;
+			value = walk(ap->right, env);
+		}else{
+			name = (TOKEN*)ip->right->left;
+			value = walk(ap,env);
+		}
+        bindings = make_binding(name, value, bindings);
+		printf("binding is (%s,%d)\n",bindings->name->lexeme, bindings->val->integer);
     }
     newenv -> bindings = bindings ;
     return newenv;
 }
 
 NODE* formals(CLOSURE* f){
-	return (f->code->right->right);
+	return (f->code->left->right->right);
 }
 
-VALUE * lexical_call_method ( TOKEN *name , NODE *args , FRAME *env) {
+VALUE *lexical_call_method ( TOKEN *name , NODE *args , FRAME *env) {
+	printf("calling a function of name %s\n", name->lexeme);
 	CLOSURE *f = name_method (name, env)->closure;
-	FRAME *newenv = extend_frame ( env , formals (f) , args );
+	FRAME *newenv = extend_frame (env, formals(f), args );
 	newenv -> next =f->env;
-	return walk(f->code, newenv);
+	return walk(f->code->right, newenv);
 }
 
 
