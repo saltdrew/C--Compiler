@@ -92,23 +92,22 @@ VALUE *walk(NODE *term, FRAME *env){
 			return select_return(left,right);
 			break;
 		case '~':
-			NODE *arg1=term->right;
-			switch(arg1->type){
-				case 'D':
-					walk(term->right,env);
-					break;
-				case LEAF:
-					return declaration_method((TOKEN*)(arg1->left),env);
-					break;
-				case '=':
-					declaration_method((TOKEN*)(arg1->left->left),env);
-					walk(arg1,env);
-					return NULL;
-					break;
-				default:
-					printf("defaulted in ~, returning null\n");
-					return NULL;
+			//Three cases:
+			//right node is D -> walk left node then right
+			//right node is = -> declare variable and walk it (which in turn assigns this var)
+			if (term->right->type=='='){
+				declaration_method((TOKEN*)(term->right->left->left),env);
+				return walk(term->right,env);
 			}
+			if (term->right->type==LEAF){
+				declaration_method((TOKEN*)(term->right->left),env);
+				return NULL;
+			}
+			printf("");
+			left = walk(term->left,env);
+			right = walk(term->right,env);
+			return select_return(left,right);
+			break;
 		case '=':{
 			VALUE *toAssign= walk(term->right,env); //FIX THIS
 			assign_method((TOKEN*)(term->left->left),env,toAssign);

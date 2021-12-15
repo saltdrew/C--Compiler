@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     if (result==NULL){
         printf("result is null\n");
     }else{
-        printf("%d\n",result->integer);
+        printf("Answer is %d\n",result->integer);
     }
     free(result);
     return 0;

@@ -1,13 +1,4 @@
 #!/bin/bash
 rm mycc;
 make
-./mycc <<< "
-            int main(void){
-                function twice (function f) {
-                    int g( int x) {return f(f(x));}
-                    return g;
-                }
-                int double(int x){return x+x;}
-                int quadruple = twice(double);
-                return quadruple(2);
-            }"
+./mycc <<< "int fact(int x){if (x<1){return 1;}else{return x*fact(x-1);}}int f(void){fact(11);} int main(void){return f();}"
