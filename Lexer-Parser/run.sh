@@ -1,10 +1,13 @@
 #!/bin/bash
 rm mycc;
 make
-./mycc <<< "int main(void){
-                int factorial(int x){
-                    if(x==0){return 1;}
-                else{return x*factorial(x-1);}
+./mycc <<< "
+            int main(void){
+                function twice (function f) {
+                    int g( int x) {return f(f(x));}
+                    return g;
                 }
-                return factorial(10);
+                int double(int x){return x+x;}
+                int quadruple = twice(double);
+                return quadruple(2);
             }"

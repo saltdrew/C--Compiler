@@ -72,3 +72,42 @@ if ./mycc <<<"int main(void){
 else
     echo "recursive factorial test FAILED"
 fi
+
+if ./mycc <<<"int main(void){
+                int x = 10;
+                int f(void){return x;}
+                int g(void){int x = 20; return f();}
+                return g();
+            }" | grep -q '10'; then
+    echo "lexical scoping test passed"
+else
+    echo "lexical scoping test FAILED"
+fi
+
+if ./mycc <<<"int main(void){
+                function cplus ( int a ) {
+                    int cplusa ( int b ) { return a+b; }
+                    return cplusa ;
+                }
+                int f = cplus(8);
+                return f(4);
+            }" | grep -q '12'; then
+    echo "functional return (cplus) test passed"
+else
+    echo "function return (cplus) test FAILED"
+fi
+
+if ./mycc <<<"
+                int main(void){
+                    function twice (function f) {
+                        int g( int x) {return f(f(x));}
+                        return g;
+                    }
+                    int double(int x){return x+x;}
+                    int quadruple = twice(double);
+                    return quadruple(2);
+                }" | grep -q '8'; then
+    echo "functional composition (twice) test passed"
+else
+    echo "function composition (twice) test FAILED"
+fi
