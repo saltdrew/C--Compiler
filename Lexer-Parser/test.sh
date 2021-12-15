@@ -48,3 +48,27 @@ if ./mycc <<< "int main(void){int x=5;if (x==6){return x*x;}else{return x+x;}}}"
 else
     echo "if/else test FAILED"
 fi
+
+if ./mycc <<< "int main(void){int add(int x,int y){return x+y;}return add(2,2);}" | grep -q '4'; then
+    echo "one function test passed"
+else
+    echo "one function test FAILED"
+fi
+
+if ./mycc <<< "int main(void){int double(int x){return x+x;}int add(int x,int y){return x+y;}return add(double(2),double(2));}" | grep -q '8'; then
+    echo "two functions (both called by main) test passed"
+else
+    echo "two functions (both called by main) test FAILED"
+fi
+
+if ./mycc <<<"int main(void){
+                int factorial(int x){
+                    if(x==0){return 1;}
+                else{return x*factorial(x-1);}
+                }
+                return factorial(10);
+            }" | grep -q '3628800'; then
+    echo "recursive factorial test passed"
+else
+    echo "recursive factorial test FAILED"
+fi

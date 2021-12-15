@@ -68,7 +68,7 @@ VALUE *walk(NODE *term, FRAME *env){
 	VALUE* value=(VALUE*)malloc(sizeof(VALUE));
 	VALUE* left;
 	VALUE* right;
-	printf("walking node with type %d\n",term->type);
+	printf("walking node with type %s\n",named(term->type));
 	switch(term->type){
 		case 'D':
 			TOKEN* name = (TOKEN*)term->left->right->left->left;
@@ -178,7 +178,7 @@ FRAME *extend_frame(FRAME *env, NODE *ids, NODE *args){
 	TOKEN* name;
 	VALUE* value;
 
-    for (ip = ids, ap = args; (ip->type==',' || ip->type=='~') && (ap->type==',' || ap->type==LEAF); ip=ip->left, ap=ap->left){
+    for (ip = ids, ap = args; (ip->type==',' || ip->type=='~'); ip=ip->left, ap=ap->left){
 		if (ip->type == ','){
 			name = (TOKEN*)ip->right->right->left;
 			value = walk(ap->right, env);
