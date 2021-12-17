@@ -23,7 +23,7 @@ VALUE *assign_method (TOKEN *x ,FRAME *frame, VALUE* value) {
         BINDING *bindings = frame->bindings;
         while ( bindings != NULL ) {
             if ( bindings -> name == x){
-                printf("assigning %d to %s\n",value->integer,bindings->name->lexeme);
+                //printf("assigning %d to %s\n",value->integer,bindings->name->lexeme);
                 bindings -> val = value;
                 return value;
             }

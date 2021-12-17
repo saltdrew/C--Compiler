@@ -98,15 +98,15 @@ else
 fi
 
 if ./mycc <<<"
-                int main(void){
-                    function twice (function f) {
-                        int g( int x) {return f(f(x));}
-                        return g;
-                    }
-                    int double(int x){return x+x;}
-                    int quadruple = twice(double);
-                    return quadruple(2);
-                }" | grep -q 'Answer is 8'; then
+int main(void){
+    function twice (function f) {
+        int g( int x) {return f(f(x));}
+        return g;
+    }
+    int double(int x){return x+x;}
+    int quadruple = twice(double);
+    return quadruple(2);
+}" | grep -q 'Answer is 8'; then
     echo "functional composition (twice) test passed"
 else
     echo "function composition (twice) test FAILED"

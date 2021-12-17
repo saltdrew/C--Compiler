@@ -1,4 +1,12 @@
 #!/bin/bash
 rm mycc;
 make
-./mycc <<< "int fact(int x){if (x<1){return 1;}else{return x*fact(x-1);}}int f(void){fact(11);} int main(void){return f();}"
+./mycc <<< "
+
+int main(void){
+    int x = 10;
+    int f(void){return x;}
+    int g(void){int x = 20; return f();}
+    return g();
+}
+"
