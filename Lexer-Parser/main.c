@@ -1,3 +1,6 @@
+//MAIN.c
+//This file calls the parser and then the interpreter and prints the result
+
 #include <stdio.h>
 #include <ctype.h>
 #include "C.tab.h"

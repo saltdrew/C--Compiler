@@ -1,3 +1,6 @@
+//FRAME.h
+//This file is an interface for frame functions and also has the data structures value, binding and frame.
+
 
 #include "nodes.h"
 

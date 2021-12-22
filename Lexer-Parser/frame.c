@@ -1,3 +1,7 @@
+//FRAME.c
+//This file has functions name_method, assign_method, declaration_method, make_frame, make_binding, make_closure
+
+
 #include "frame.h"
 #include <stddef.h>
 #include <stdlib.h>

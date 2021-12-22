@@ -1,3 +1,8 @@
+
+//INTEPRETER.c
+//This file has the functions applyFunc, select_return, walk, if_method, extend_frame, lexical_call_method, and interpret.
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "interpreter.h"
@@ -70,7 +75,7 @@ VALUE *walk(NODE *term, FRAME *env){
 	VALUE* right;
 	//printf("walking node with type %s\n",named(term->type));
 	switch(term->type){
-		case 'D':
+		case 'D':{
 			TOKEN* name = (TOKEN*)term->left->right->left->left;
 			declaration_method(name,env);
 
@@ -84,6 +89,7 @@ VALUE *walk(NODE *term, FRAME *env){
 			}
 			return NULL;
 			break;
+		}
 		case APPLY:
 			return lexical_call_method((TOKEN*)term->left->left,term->right,env);
 		case ';':
@@ -111,7 +117,7 @@ VALUE *walk(NODE *term, FRAME *env){
 			return NULL;
 			break;
 		}
-    	case LEAF:
+    	case LEAF:{
 			TOKEN *token = (TOKEN*)(term->left);
 			//printf("encountered leaf, type is %d\n",token->type);
 			if (token->type == IDENTIFIER){
@@ -127,10 +133,11 @@ VALUE *walk(NODE *term, FRAME *env){
 				return value;
 			}
 			break;
+		}
     	case RETURN:
 			return walk(term->left,env);
 			break;
-		case IF:
+		case IF:{
 			NODE* condition = term->left;
 			NODE* consequent;
 			NODE* alternative;
@@ -143,6 +150,8 @@ VALUE *walk(NODE *term, FRAME *env){
 				alternative = NULL;
 			}
 			return if_method(condition,consequent,alternative,env);
+			break;
+		}
 		default:
 			left = walk(term->left,env);
 			right = walk(term->right,env);
