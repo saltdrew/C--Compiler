@@ -1,0 +1,53 @@
+
+This is my demonstation for the compilers coursework. All I managed to complete was the interpreter so this is what i'll be showing now. I'll give an example now 
+
+int main(void){return 5+5;}
+
+As you can see, the interpreter gives as the "answer" whatever is returned by the main function.
+
+The interpreter works for all the main functionality of c--, including functions, lexical scoping, functional arguements and function decomposition. I'll show these examples of these working now. 
+
+int main(void){
+	int factorial(int x){
+		if(x==0){return 1;}
+	else{return x*factorial(x-1);}
+	}
+	return factorial(10);
+}
+
+In this example I've defined a function which returns the factorial of a number. I've put in the number 10 and it correctly returns its factorial. I've tested this function and it works up to the maximum integer value, so recursion seems to work quite well. 
+
+int main(void){
+    int x = 10;
+    int f(void){return x;}
+    int g(void){int x = 20; return f();}
+    return g();
+}
+
+In this example, the lexical scoping is demonstated. The function f is defined in the context where x=10, but is called when x=20. Due to lexical scoping, when called it correctly returns x as 10, as this its value where the function was defined.
+
+int main(void){
+    function cplus ( int a ) {
+        int cplusa ( int b ) { return a+b; }
+        return cplusa ;
+    }
+    int f = cplus(8);
+    return f(4);
+}
+
+In this example, functional return is demonstrated, so f is defined by callining cplus with 8 as an argument, and the function cplus a is returned where a is 8. This resulting funciton is then called with 4, which returns 12 correctly. 
+            
+int main(void){
+    function twice (function f) {
+        int g( int x) {return f(f(x));}
+        return g;
+    }
+    int double(int x){return x+x;}
+    int quadruple = twice(double);
+    return quadruple(2);
+}
+In this example, function composition is demonstated, where the function twice is applied to double, which results in the function quadruple. This gives the correct result of 8. 
+
+For more details on implementation please see my report, and thats all thanks for watching. 
+
+            

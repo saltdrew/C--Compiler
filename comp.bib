@@ -1,0 +1,35 @@
+@inproceedings{Ginsbach2018,
+abstract = {Optimizing compilers require sophisticated program analysis and transformations to exploit modern hardware. Implementing the appropriate analysis for a compiler optimization is a time consuming activity. For example, in LLVM, tens of thousands of lines of code are required to detect appropriate places to apply peephole optimizations. It is a barrier to the rapid prototyping and evaluation of new optimizations. In this paper we present the Compiler Analysis Description Language (CAnDL), a domain specific language for compiler analysis. CAnDL is a constraint based language that operates over LLVM's intermediate representation. The compiler developer writes a CAnDL program, which is then compiled by the CAnDL compiler into a C++ LLVM pass. It provides a uniform manner in which to describe compiler analysis and can be applied to a range of compiler analysis problems, reducing code length and complexity. We implemented and evaluated CAnDL on a number of real world use cases: eliminating redundant operations; graphics code optimization; identifying static control flow regions. In all cases were we able to express the analysis more briefly than competing approaches.},
+author = {Ginsbach, Philip and Crawford, Lewis and O'Boyle, Michael F.P.},
+booktitle = {CC 2018 - Proceedings of the 27th International Conference on Compiler Construction, Co-located with CGO 2018},
+doi = {10.1145/3178372.3179515},
+file = {:home/andrew/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Ginsbach, Crawford, O'Boyle - 2018 - CAnDL a domain specific language for compiler analysis.pdf:pdf},
+isbn = {9781450356442},
+keywords = {Constraint programming,LLVM,Optimization},
+mendeley-groups = {Compilers Exam},
+month = {feb},
+pages = {151--162},
+publisher = {ACM},
+title = {{CAnDL: a domain specific language for compiler analysis}},
+url = {https://www.research.ed.ac.uk/en/publications/candl-a-domain-specific-language-for-compiler-analysis},
+volume = {2018-February},
+year = {2018}
+}
+
+@inproceedings{Lerner2005,
+abstract = {We present Rhodium, a new language for writing compiler optimizations that can be automatically proved sound. Unlike our previous work on Cobalt, Rhodium expresses optimizations using explicit dataflow facts manipulated by local propagation and transformation rules. This new style allows Rhodium optimizations to be mutually recursively defined, to be automatically composed, to be interpreted in both flow-sensitive and -insensitive ways, and to be applied interprocedurally given a separate context-sensitivity strategy, all while retaining soundness. Rhodium also supports infinite analysis domains while guaranteeing termination of analysis. We have implemented a soundness checker for Rhodium and have specified and automatically proven the soundness of all of Cobalt's optimizations plus a variety of optimizations not expressible in Cobalt, including Andersen's points-to analysis, arithmetic-invariant detection, loop-induction-variable strength reduction, and redundant array load elimination. Copyright 2005 ACM.},
+author = {Lerner, Sorin and Rice, Erika and Millstein, Todd and Chambers, Craig},
+booktitle = {Conference Record of the Annual ACM Symposium on Principles of Programming Languages},
+doi = {10.1145/1040305.1040335},
+file = {:home/andrew/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Lerner et al. - 2005 - Automated soundness proofs for dataflow analyses and transformations via local rules.pdf:pdf},
+isbn = {158113830X},
+issn = {07308566},
+keywords = {Automated correctness proofs,Compiler optimization,F31 [Logics and Meanings of Programs]: Specifying and Verifying and Reasoning about Programs-mechanical verification General Terms: Reliability, languages, verification Keywords: Compiler optimization, automated correctness proofs},
+mendeley-groups = {Compilers Exam},
+pages = {364--377},
+publisher = {Association for Computing Machinery},
+title = {{Automated soundness proofs for dataflow analyses and transformations via local rules}},
+url = {https://dl.acm.org/doi/10.1145/1040305.1040335},
+year = {2005}
+}
+

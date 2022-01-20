@@ -7,3 +7,6 @@ Lexer-Parser/mycc
 *.pdf
 *.gz
 *.toc
+compilersmock.out
+compilersmock.blg
+compilersmock.bbl
